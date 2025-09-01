@@ -1,0 +1,5 @@
+{
+  "name": "AI Invoice Generator",
+  "description": "A modern, AI-powered invoice generator. Easily create professional receipts by adding items and using AI to parse client information from unstructured text.",
+  "requestFramePermissions": []
+}
