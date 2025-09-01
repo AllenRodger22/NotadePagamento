@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Item } from '../types';
 import { TrashIcon, PlusIcon } from './Icons';
 
@@ -10,15 +10,26 @@ interface ItemListProps {
 }
 
 const ItemList: React.FC<ItemListProps> = ({ items, setItems, extraValue, setExtraValue }) => {
+  const listRef = useRef<HTMLDivElement>(null);
 
   const handleAddItem = () => {
+    const newItemId = crypto.randomUUID();
     const newItem: Item = {
-      id: crypto.randomUUID(),
-      ref: `ITEM-${String(items.length + 1).padStart(3, '0')}`,
+      id: newItemId,
+      ref: '',
       description: '',
       value: 0,
     };
     setItems([...items, newItem]);
+
+    setTimeout(() => {
+      if (listRef.current) {
+        const newRefInput = listRef.current.querySelector(`[data-item-id="${newItemId}"] input[data-field="ref"]`) as HTMLInputElement;
+        if (newRefInput) {
+          newRefInput.focus();
+        }
+      }
+    }, 0);
   };
 
   const handleItemChange = (id: string, field: keyof Omit<Item, 'id'>, value: string | number) => {
@@ -28,13 +39,24 @@ const ItemList: React.FC<ItemListProps> = ({ items, setItems, extraValue, setExt
   const handleDeleteItem = (id: string) => {
     setItems(items.filter(item => item.id !== id));
   };
+  
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, item: Item) => {
+    if (e.key === 'Enter') {
+      const isLastItem = items[items.length - 1].id === item.id;
+      if (isLastItem) {
+        e.preventDefault();
+        handleAddItem();
+      }
+    }
+  };
+
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
       <h2 className="text-lg font-bold text-slate-800 mb-4">Itens</h2>
-      <div className="space-y-4">
+      <div ref={listRef} className="space-y-4">
         {items.map((item) => (
-          <div key={item.id} className="p-3 rounded-lg border border-slate-200 animate-fade-in">
+          <div key={item.id} data-item-id={item.id} className="p-3 rounded-lg border border-slate-200 animate-fade-in">
             <div className="flex flex-wrap sm:flex-nowrap gap-2 items-end">
               <div className="w-full sm:w-1/4">
                 <label className="block text-xs font-medium text-slate-500 mb-1">Ref.</label>
@@ -43,6 +65,7 @@ const ItemList: React.FC<ItemListProps> = ({ items, setItems, extraValue, setExt
                   value={item.ref}
                   onChange={(e) => handleItemChange(item.id, 'ref', e.target.value)}
                   className="w-full px-2 py-1 text-sm bg-slate-100 border border-slate-300 rounded-md"
+                  data-field="ref"
                 />
               </div>
               <div className="w-full sm:w-1/2">
@@ -53,6 +76,7 @@ const ItemList: React.FC<ItemListProps> = ({ items, setItems, extraValue, setExt
                   onChange={(e) => handleItemChange(item.id, 'description', e.target.value)}
                   placeholder="Descrição do serviço"
                   className="w-full px-2 py-1 text-sm bg-slate-100 border border-slate-300 rounded-md"
+                  data-field="description"
                 />
               </div>
               <div className="flex-grow w-full sm:w-auto">
@@ -62,6 +86,8 @@ const ItemList: React.FC<ItemListProps> = ({ items, setItems, extraValue, setExt
                   value={item.value}
                   onChange={(e) => handleItemChange(item.id, 'value', parseFloat(e.target.value) || 0)}
                   className="w-full px-2 py-1 text-sm bg-slate-100 border border-slate-300 rounded-md"
+                  data-field="value"
+                  onKeyDown={(e) => handleKeyDown(e, item)}
                 />
               </div>
               <div className="flex-shrink-0">

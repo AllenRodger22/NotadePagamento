@@ -6,7 +6,7 @@ interface SearchNotesProps {
   onLoadNote: (note: SavedReceipt) => void;
 }
 
-const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
+const TWENTY_MINUTES_IN_MS = 20 * 60 * 1000;
 
 const SearchNotes: React.FC<SearchNotesProps> = ({ onLoadNote }) => {
   const [allNotes, setAllNotes] = useState<SavedReceipt[]>([]);
@@ -45,9 +45,24 @@ const SearchNotes: React.FC<SearchNotesProps> = ({ onLoadNote }) => {
     }
   };
 
+  const handleClearAll = () => {
+    if (window.confirm("ATENÇÃO: Isso apagará TODAS as notas salvas. Deseja continuar?")) {
+      localStorage.removeItem('receipts');
+      setAllNotes([]);
+    }
+  };
+
   return (
     <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 max-w-4xl mx-auto">
-      <h2 className="text-xl font-bold text-slate-800 mb-4">Minhas Notas Salvas</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-bold text-slate-800">Minhas Notas Salvas</h2>
+        <button
+          onClick={handleClearAll}
+          className="px-3 py-1.5 bg-red-600 text-white text-sm font-semibold rounded-lg shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+        >
+          Limpar Tudo
+        </button>
+      </div>
       
       <div className="relative mb-6">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -65,7 +80,7 @@ const SearchNotes: React.FC<SearchNotesProps> = ({ onLoadNote }) => {
       <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-2">
         {filteredNotes.length > 0 ? (
           filteredNotes.map(note => {
-            const isDeletable = (Date.now() - note.createdAt) < FIVE_MINUTES_IN_MS;
+            const isDeletable = (Date.now() - note.createdAt) < TWENTY_MINUTES_IN_MS;
             return (
               <div key={note.receiptNumber} className="group flex items-center justify-between gap-4 p-4 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors">
                 <div className="flex-grow cursor-pointer" onClick={() => onLoadNote(note)}>

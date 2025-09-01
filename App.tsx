@@ -10,10 +10,10 @@ import SearchNotes from './components/SearchNotes';
 const App: React.FC = () => {
   // FIX: Explicitly type `receiptNumber` as string to avoid type inference issues with crypto.randomUUID().
   const [receiptNumber, setReceiptNumber] = useState<string>(crypto.randomUUID());
-  const [serviceType, setServiceType] = useState('Serviços Gerais');
+  const [serviceType, setServiceType] = useState('');
   const [client, setClient] = useState<Client>({ name: '' });
   const [items, setItems] = useState<Item[]>([
-    { id: crypto.randomUUID(), ref: 'ITEM-001', description: 'Serviço Prestado', value: 150 },
+    { id: crypto.randomUUID(), ref: '', description: '', value: 0 },
   ]);
   const [extraValue, setExtraValue] = useState(0);
   const [total, setTotal] = useState(0);
@@ -66,9 +66,11 @@ const App: React.FC = () => {
 
   const handleNewReceipt = () => {
     setClient({ name: '' });
-    setItems([]);
+    setItems([
+      { id: crypto.randomUUID(), ref: '', description: '', value: 0 },
+    ]);
     setExtraValue(0);
-    setServiceType('Serviços Gerais');
+    setServiceType('');
     setReceiptNumber(crypto.randomUUID());
     setIsConfirmed(false);
     setView('editor');

@@ -18,7 +18,7 @@ const ServiceSelector: React.FC<ServiceSelectorProps> = ({ serviceType, setServi
           id="service-type"
           value={serviceType}
           onChange={(e) => setServiceType(e.target.value)}
-          placeholder="ex: Consultoria de Marketing"
+          placeholder="Serviços Gerais"
           className="w-full px-3 py-2 bg-slate-100 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
       </div>

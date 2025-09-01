@@ -60,20 +60,22 @@ const ReceiptPreview: React.FC<ReceiptPreviewProps> = ({
       <div id="receipt-content" ref={receiptRef} className="bg-white p-4">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start pb-6 border-b border-slate-200">
-          <div className="mb-4 sm:mb-0 w-full sm:w-1/2">
+          <div className="mb-4 sm:mb-0 w-full sm:w-auto">
+            <h4 className="text-2xl sm:text-3xl font-semibold text-blue-600 uppercase">Nota de Pagamento</h4>
+            <div className="flex items-center gap-4 mt-2">
+              <p className="text-slate-500 text-xs mt-1">Ref: {receiptNumber}</p>
+            </div>
+          </div>
+          <div className="text-left sm:text-right w-full sm:w-1/2">
              <input
               type="text"
               value={companyInfo.name}
               onChange={(e) => !isConfirmed && setCompanyInfo({ name: e.target.value })}
               readOnly={isConfirmed}
               aria-label="Nome da Empresa (editável)"
-              className="text-2xl sm:text-3xl font-bold text-slate-800 bg-transparent focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md -ml-2 px-2 py-1 w-full"
+              className="text-2xl sm:text-3xl font-bold text-slate-800 bg-transparent focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-md sm:text-right w-full px-2 py-1"
             />
-          </div>
-          <div className="text-left sm:text-right w-full sm:w-auto">
-            <h3 className="text-xl sm:text-2xl font-semibold text-green-600 uppercase">Nota de Pagamento</h3>
-            <p className="text-slate-500 text-sm mt-1 break-all">Ref: {receiptNumber}</p>
-            <p className="text-slate-500 text-sm">{today}</p>
+            <p className="text-slate-500 text-sm mt-1">{today}</p>
           </div>
         </div>
 
